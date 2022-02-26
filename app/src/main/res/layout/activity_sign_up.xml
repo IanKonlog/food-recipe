@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
     android:orientation="vertical"
-    android:background="@color/white"
-    android:padding="20dp">
+    android:padding="20dp"
+    tools:context=".SignUpActivity">
 
     <ImageView
         android:id="@+id/logo_image"
@@ -23,9 +22,8 @@
         android:id="@+id/logo_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:fontFamily="@font/abel"
-        android:text="Hello, Welcome Back"
+        android:text="Welcome"
         android:textSize="40sp"
         android:transitionName="logo_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,13 +31,12 @@
         app:layout_constraintTop_toBottomOf="@+id/logo_image" />
 
     <TextView
-        android:id="@+id/signPhrase"
+        android:id="@+id/signUpPhrase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Sign Up to start your discovery"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="16dp"
-        android:text="Sign In to Continue"
         android:textSize="18sp"
         android:transitionName="sign_register"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,28 +44,61 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo_name" />
 
+
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signPhrase">
+        app:layout_constraintTop_toBottomOf="@+id/signUpPhrase">
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/username"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username">
+            android:hint="Username"
+            app:counterEnabled="true"
+            app:counterMaxLength="10">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phoneNumber"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phone No">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,35 +118,25 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_margin="5dp"
-            android:background="#00000000"
-            android:elevation="0dp"
-            android:text="Forget Password?"
-            android:textColor="@color/app_color" />
-
-        <Button
-            android:id="@+id/loginBtn"
+            android:id="@+id/registerBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:background="@color/app_color"
-            android:text="Sign In"
+            android:text="Register"
             android:textColor="@color/white"
             android:transitionName="btn_sign_register" />
 
         <Button
-            android:id="@+id/signUpBtn"
+            android:id="@+id/alreadySignBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginTop="5dp"
             android:background="#00000000"
             android:elevation="0dp"
-            android:text="New User? SIGN UP"
+            android:text="Already a user? SIGN IN"
             android:textColor="@color/app_color"
             android:transitionName="btn_already" />
 

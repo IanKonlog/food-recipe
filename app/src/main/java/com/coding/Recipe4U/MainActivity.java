@@ -2,9 +2,12 @@ package com.coding.Recipe4U;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Pair;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -53,11 +56,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent =  new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
+
+                //Define pairs for transition of image and text
+                Pair[] pairs = new Pair[2];
+                pairs[0] = new Pair<View,String>(logo,"logo_image");
+                pairs[1] = new Pair<View,String>(slogan,"logo_text");
+
+                //Activity options for animations from main activity to next activity
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,pairs);
+
+                //toBundle() to carry out the transition effect
+                startActivity(intent,options.toBundle());
                 finish(); // remove activity from activity list
             }
         },SPLASH_SCREEN);
-
 
     }
 }

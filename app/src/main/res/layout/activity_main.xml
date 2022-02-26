@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="#03989e">
+    android:background="@color/app_color">
 
 
     <ImageView
@@ -15,6 +15,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="100dp"
         android:layout_marginEnd="10dp"
+        android:transitionName="logo_image"
         android:src="@drawable/app_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:fontFamily="@font/abel"
+        android:transitionName="logo_text"
         android:text="Discover New Tastes"
         android:textAlignment="center"
         android:textColor="#FFF"
