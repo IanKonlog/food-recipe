@@ -11,12 +11,22 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private Button register, alreadyReg;
     private TextView welcomeMess, signUpMess;
     private ImageView logo;
+
+    private TextInputLayout regUserName, regEmail, regPhoneNo, regPassword;
+
+    private FirebaseDatabase rootNode;
+    private DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +37,20 @@ public class SignUpActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_sign_up);
 
-        register = findViewById(R.id.registerBtn);
-        alreadyReg = findViewById(R.id.alreadySignBtn);
+        register = findViewById(R.id.registerBtn); // Register Button
+        alreadyReg = findViewById(R.id.alreadySignBtn); //Already Signed in Button
         signUpMess = findViewById(R.id.signUpPhrase);
         welcomeMess = findViewById(R.id.logo_name);
         logo = findViewById(R.id.logo_image);
 
+        /*Text Input Hooks*/
+        regUserName = findViewById(R.id.username);
+        regEmail = findViewById(R.id.email);
+        regPhoneNo = findViewById(R.id.phoneNumber);
+        regPassword = findViewById(R.id.password);
+
+
+        //Return to Sign In page
         alreadyReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,5 +71,24 @@ public class SignUpActivity extends AppCompatActivity {
                 finish(); // remove activity from activity list
             }
         });
+
+        //Register button event
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rootNode = FirebaseDatabase.getInstance();
+                reference  = rootNode.getReference().child("User");
+
+                //Get Values from Text fields
+                String userName = regUserName.getEditText().getText().toString();
+                String email = regEmail.getEditText().getText().toString();
+                String phoneNo = regPhoneNo.getEditText().getText().toString();
+                String pass = regPassword.getEditText().getText().toString();
+
+                User user = new User("",userName,email,pass, phoneNo,"","");
+                reference.child(phoneNo).setValue(user);
+            }
+        });
+
     }
 }
