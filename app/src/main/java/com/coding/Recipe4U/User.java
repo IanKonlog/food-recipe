@@ -1,16 +1,15 @@
 package com.coding.Recipe4U;
 
 public class User {
-    private String name, userName, email, password, phoneNumber, profilePicture, birthDate;
+    private String name, userName, email, password, phoneNumber, profilePicture;
 
-    public User(String name, String userName, String email, String password, String phoneNumber, String profilePicture, String birthDate) {
+    public User(String name, String userName, String email, String password, String phoneNumber, String profilePicture) {
         this.name = name;
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.profilePicture = profilePicture;
-        this.birthDate = birthDate;
     }
 
     public String getName() {
@@ -61,11 +60,4 @@ public class User {
         this.profilePicture = profilePicture;
     }
 
-    public String getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
-    }
 }

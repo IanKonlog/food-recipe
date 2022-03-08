@@ -13,7 +13,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
         android:padding="20dp"
         android:background="@color/app_color">
 
@@ -21,31 +21,32 @@
             android:id="@+id/profile_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/common_google_signin_btn_icon_dark"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/common_google_signin_btn_icon_dark" />
 
         <TextView
             android:id="@+id/full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Roger K"
-            android:textSize="20sp"
-            android:fontFamily="@font/abel"
-            android:layout_toRightOf="@+id/profile_image"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:includeFontPadding="false"/>
+            android:layout_toRightOf="@+id/profile_image"
+            android:fontFamily="@font/abel"
+            android:includeFontPadding="false"
+            android:text="Roger K"
+            android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/user_name_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="IanK"
-            android:textSize="14sp"
-            android:layout_toRightOf="@+id/profile_image"
-            android:layout_centerVertical="true"
             android:layout_below="@+id/full_name"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:includeFontPadding="false"/>
+            android:layout_toRightOf="@+id/profile_image"
+            android:includeFontPadding="false"
+            android:text="IanK"
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
@@ -53,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:layout_marginTop="-100dp">
+        android:layout_marginTop="-60dp">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
@@ -156,7 +157,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Full name">
+            android:hint="Full name"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/fullName">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -168,14 +171,20 @@
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="User Name">
+            android:hint="User Name"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/userName">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:enabled="false"
                 android:text="IanK"
                 android:drawableLeft="@drawable/ic_username_icon"
                 android:drawablePadding="10dp"
@@ -186,7 +195,26 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email">
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:hint="Password"
+            android:id="@+id/passw">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="******"
+                android:drawableLeft="@drawable/ic_password"
+                android:drawablePadding="10dp"
+                android:layout_marginBottom="10dp"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -201,7 +229,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Phone No">
+            android:hint="Phone No"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/phoneNo">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -213,28 +243,15 @@
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="******"
-                android:drawableLeft="@drawable/ic_password"
-                android:drawablePadding="10dp"
-                android:layout_marginBottom="10dp"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Update"
+            android:background="@color/app_color"
             android:fontFamily="@font/abel"
-            android:background="@color/app_color"/>
+            android:onClick="update"
+            android:text="Update" />
     </LinearLayout>
 
     </LinearLayout>
