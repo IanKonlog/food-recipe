@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserProfileActivity">
+    tools:context=".UI.UserProfileActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/common_google_signin_btn_icon_dark" />
+            android:background="@drawable/profile_pic_round"
+            android:src="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/full_name"

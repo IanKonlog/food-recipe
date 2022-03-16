@@ -13,16 +13,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Recipe4U">
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".UI.VerifyPhone"
             android:exported="false" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".UI.UserProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".UI.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".UI.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UI.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

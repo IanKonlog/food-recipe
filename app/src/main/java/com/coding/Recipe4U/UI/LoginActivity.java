@@ -1,6 +1,4 @@
-package com.coding.Recipe4U;
-
-import static android.content.ContentValues.TAG;
+package com.coding.Recipe4U.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.coding.Recipe4U.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     private ImageView image;
     private TextView logoText, signInText;
 
-    private TextInputLayout loginUserName, loginPassword; // Login variables
+    private TextInputLayout loginPhoneNo, loginPassword; // Login variables
 
     private FirebaseDatabase rootNode;
     private DatabaseReference reference;
@@ -52,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         signInText = findViewById(R.id.signPhrase);
 
         //Variables to login
-        loginUserName = findViewById(R.id.username);
+        loginPhoneNo = findViewById(R.id.phoneNo);
         loginPassword = findViewById(R.id.password);
 
         signUp.setOnClickListener(new View.OnClickListener() {
@@ -72,14 +70,14 @@ public class LoginActivity extends AppCompatActivity {
 
     //Validate Username
     private Boolean validateUserName(){
-        String val = loginUserName.getEditText().getText().toString();
+        String val = loginPhoneNo.getEditText().getText().toString();
         if (val.isEmpty()){
-            loginUserName.setError("Username cannot be empty");
+            loginPhoneNo.setError("Username cannot be empty");
             return false;
         }
         else{
-            loginUserName.setError(null);
-            loginUserName.setErrorEnabled(false);
+            loginPhoneNo.setError(null);
+            loginPhoneNo.setErrorEnabled(false);
             return true;
         }
     }
@@ -116,13 +114,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void isUser() {
         //Get Values from Text fields
-        String userName = loginUserName.getEditText().getText().toString().trim();
+        String userPhone = loginPhoneNo.getEditText().getText().toString().trim();
         String pass = loginPassword.getEditText().getText().toString().trim();
 
         rootNode = FirebaseDatabase.getInstance();
         reference  = rootNode.getReference().child("User");
 
-        Query checkUser = reference.orderByChild("userName").equalTo(userName);
+        Query checkUser = reference.orderByChild("phoneNumber").equalTo(userPhone);
         //Log.d(TAG, "isUser: checking if it returns something"+reference.child("userName"));
 
         //System.out.println(reference.child("userName"));
@@ -132,28 +130,29 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (snapshot.exists()){
 
-                    loginUserName.setError(null);
-                    loginUserName.setErrorEnabled(false);
+                    loginPhoneNo.setError(null);
+                    loginPhoneNo.setErrorEnabled(false);
 
-                    String passwordFromDB = snapshot.child(userName).child("password").getValue(String.class);
+                    String passwordFromDB = snapshot.child(userPhone).child("password").getValue(String.class);
 
                     if(passwordFromDB.equals(pass)){
 
                         loginPassword.setError(null);
                         loginPassword.setErrorEnabled(false);
 
-                        String nameFromDb = snapshot.child(userName).child("name").getValue(String.class);
-                        String emailFromDb = snapshot.child(userName).child("email").getValue(String.class);
-                        String phoneNoFromDb = snapshot.child(userName).child("phoneNumber").getValue(String.class);
+                        String nameFromDb = snapshot.child(userPhone).child("name").getValue(String.class);
+                        String userNameFromDb = snapshot.child(userPhone).child("userName").getValue(String.class);
+                        String emailFromDb = snapshot.child(userPhone).child("email").getValue(String.class);
+                        //String phoneNoFromDb = snapshot.child(userPhone).child("phoneNumber").getValue(String.class);
                         //String birthdateFromDb = snapshot.child(userName).child("birthDate").getValue(String.class);
 
                         Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
 
                         intent.putExtra("name", nameFromDb);
                         intent.putExtra("email", emailFromDb);
-                        intent.putExtra("phoneNo", phoneNoFromDb);
+                        intent.putExtra("phoneNo", userPhone);
                         intent.putExtra("password", passwordFromDB);
-                        intent.putExtra("userName", userName);
+                        intent.putExtra("userName", userNameFromDb);
 
                         startActivity(intent);
                     }
@@ -164,8 +163,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 else{
-                    loginUserName.setError("No such User exists");
-                    loginUserName.requestFocus();
+                    loginPhoneNo.setError("No such User exists");
+                    loginPhoneNo.requestFocus();
                 }
             }
 

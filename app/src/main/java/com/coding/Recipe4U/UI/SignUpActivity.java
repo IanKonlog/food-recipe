@@ -1,4 +1,4 @@
-package com.coding.Recipe4U;
+package com.coding.Recipe4U.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,11 +11,15 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.coding.Recipe4U.Classes.Recipe;
+import com.coding.Recipe4U.Classes.User;
+import com.coding.Recipe4U.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -188,7 +192,12 @@ public class SignUpActivity extends AppCompatActivity {
             String phoneNo = regPhoneNo.getEditText().getText().toString().trim();
             String pass = regPassword.getEditText().getText().toString().trim();
 
-            User user = new User("", userName, email, pass, phoneNo, "");
-            reference.child(userName).setValue(user);
+            ArrayList <Recipe> R = new ArrayList<>();
+
+            Intent intent = new Intent(getApplicationContext(),VerifyPhone.class);
+            intent.putExtra("phoneNo", phoneNo);
+            startActivity(intent);
+            //User user = new User("", userName, email, pass, phoneNo, "", R);
+            //reference.child(phoneNo).setValue(user);
     }
 }

@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/abel"
-        android:text="Hello, Welcome Back"
+        android:text="VERIFY PHONE NO"
         android:textSize="40sp"
         android:transitionName="logo_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,17 +33,14 @@
         app:layout_constraintTop_toBottomOf="@+id/logo_image" />
 
     <TextView
-        android:id="@+id/signPhrase"
+        android:id="@+id/phrase_for_user_OTP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="16dp"
-        android:text="Sign In to Continue"
+        android:text="Enter Verification code sent by Text"
         android:textSize="18sp"
         android:transitionName="sign_register"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo_name" />
 
@@ -57,14 +54,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signPhrase">
+        app:layout_constraintTop_toBottomOf="@+id/phrase_for_user_OTP">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/phoneNo"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/user_OTP"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Phone Number">
+            android:hint="Enter Verification Code">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -72,54 +69,24 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/password"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            app:passwordToggleEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
         <Button
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_margin="5dp"
-            android:background="#00000000"
-            android:elevation="0dp"
-            android:text="Forget Password?"
-            android:textColor="@color/app_color" />
-
-        <Button
-            android:id="@+id/loginBtn"
+            android:id="@+id/verifyBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:background="@color/app_color"
-            android:text="Sign In"
+            android:text="VERIFY"
             android:textColor="@color/white"
             android:transitionName="btn_sign_register"
             android:elevation="10dp"/>
 
-        <Button
-            android:id="@+id/signUpBtn"
-            android:layout_width="match_parent"
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="5dp"
-            android:background="#00000000"
-            android:elevation="0dp"
-            android:text="New User? SIGN UP"
-            android:textColor="@color/app_color"
-            android:transitionName="btn_already" />
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"/>
 
     </LinearLayout>
 

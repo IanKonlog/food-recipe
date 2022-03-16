@@ -16,4 +16,13 @@
         <!-- For transitions -->
         <item name="android:windowContentTransitions">true</item>
     </style>
+
+    <style name="Theme.Recipe4U.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Recipe4U.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Recipe4U.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

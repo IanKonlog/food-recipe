@@ -1,4 +1,4 @@
-package com.coding.Recipe4U;
+package com.coding.Recipe4U.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +13,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.coding.Recipe4U.R;
 
 public class MainActivity extends AppCompatActivity {
 

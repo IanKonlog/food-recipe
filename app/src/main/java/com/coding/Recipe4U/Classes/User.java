@@ -1,15 +1,19 @@
-package com.coding.Recipe4U;
+package com.coding.Recipe4U.Classes;
+
+import java.util.ArrayList;
 
 public class User {
     private String name, userName, email, password, phoneNumber, profilePicture;
+    private ArrayList<Recipe> userFavoriteRecipes;
 
-    public User(String name, String userName, String email, String password, String phoneNumber, String profilePicture) {
+    public User(String name, String userName, String email, String password, String phoneNumber, String profilePicture, ArrayList<Recipe> userFavoriteRecipes) {
         this.name = name;
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.profilePicture = profilePicture;
+        this.userFavoriteRecipes = userFavoriteRecipes;
     }
 
     public String getName() {
@@ -60,4 +64,11 @@ public class User {
         this.profilePicture = profilePicture;
     }
 
+    public ArrayList<Recipe> getUserFavoriteRecipes() {
+        return userFavoriteRecipes;
+    }
+
+    public void setUserFavoriteRecipes(ArrayList<Recipe> userFavoriteRecipes) {
+        this.userFavoriteRecipes = userFavoriteRecipes;
+    }
 }
