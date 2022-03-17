@@ -146,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
                         //String phoneNoFromDb = snapshot.child(userPhone).child("phoneNumber").getValue(String.class);
                         //String birthdateFromDb = snapshot.child(userName).child("birthDate").getValue(String.class);
 
-                        Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), Dasboard.class);
 
                         intent.putExtra("name", nameFromDb);
                         intent.putExtra("email", emailFromDb);

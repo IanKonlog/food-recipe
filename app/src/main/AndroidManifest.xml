@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Recipe4U">
         <activity
+            android:name=".UI.Dasboard"
+            android:exported="false" />
+        <activity
             android:name=".UI.VerifyPhone"
             android:exported="false" />
         <activity
