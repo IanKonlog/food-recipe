@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.coding.Recipe4U.Classes.ApiModelClasses.RandomRecipeApiResponse;
 import com.coding.Recipe4U.Classes.ApiRequestManager;
 import com.coding.Recipe4U.Classes.Listeners.RandomRecipeResponseListener;
+import com.coding.Recipe4U.Classes.Listeners.RecipeClickListener;
 import com.coding.Recipe4U.R;
 import com.coding.Recipe4U.UI.Adapaters.RecipeAdapter;
 
@@ -83,7 +85,7 @@ public class Dasboard extends AppCompatActivity {
             recyclerView.setLayoutManager(new GridLayoutManager(Dasboard.this, 1));
 
 
-            recipeAdapter = new RecipeAdapter(Dasboard.this, response.recipes);
+            recipeAdapter = new RecipeAdapter(Dasboard.this, response.recipes, recipeClickListener);
 
             recyclerView.setAdapter(recipeAdapter);
         }
@@ -107,6 +109,14 @@ public class Dasboard extends AppCompatActivity {
         @Override
         public void onNothingSelected(AdapterView<?> adapterView) {
 
+        }
+    };
+
+    private final RecipeClickListener recipeClickListener = new RecipeClickListener() {
+        @Override
+        public void onRecipeClicked(String id) {
+            startActivity(new Intent(Dasboard.this, RecipeDetailsActivity.class)
+            .putExtra("id", id));
         }
     };
 }

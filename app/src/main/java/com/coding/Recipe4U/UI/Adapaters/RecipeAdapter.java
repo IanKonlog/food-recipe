@@ -12,6 +12,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.coding.Recipe4U.Classes.ApiModelClasses.Recipe;
+import com.coding.Recipe4U.Classes.Listeners.RecipeClickListener;
 import com.coding.Recipe4U.R;
 import com.squareup.picasso.Picasso;
 
@@ -21,10 +22,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
 
     Context context;
     ArrayList<Recipe> recipes;
+    RecipeClickListener listener;
 
-    public RecipeAdapter(Context context, ArrayList<Recipe> recipes) {
+    public RecipeAdapter(Context context, ArrayList<Recipe> recipes, RecipeClickListener listener) {
         this.context = context;
         this.recipes = recipes;
+        this.listener = listener;
     }
 
 
@@ -43,6 +46,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
         holder.textTime.setText(recipes.get(position).readyInMinutes+" Minutes");
 
         Picasso.get().load(recipes.get(position).image).into(holder.recipeImage);
+
+        holder.randomListContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onRecipeClicked(String.valueOf(recipes.get(holder.getAdapterPosition()).id));
+            }
+        });
 
     }
 
