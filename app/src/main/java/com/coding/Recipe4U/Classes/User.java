@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class User {
     private String name, userName, email, password, phoneNumber, profilePicture;
-    private ArrayList<Recipe> userFavoriteRecipes;
+    private ArrayList<Recipes> userFavoriteRecipes;
 
-    public User(String name, String userName, String email, String password, String phoneNumber, String profilePicture, ArrayList<Recipe> userFavoriteRecipes) {
+    public User(String name, String userName, String email, String password, String phoneNumber, String profilePicture, ArrayList<Recipes> userFavoriteRecipes) {
         this.name = name;
         this.userName = userName;
         this.email = email;
@@ -64,11 +64,11 @@ public class User {
         this.profilePicture = profilePicture;
     }
 
-    public ArrayList<Recipe> getUserFavoriteRecipes() {
+    public ArrayList<Recipes> getUserFavoriteRecipes() {
         return userFavoriteRecipes;
     }
 
-    public void setUserFavoriteRecipes(ArrayList<Recipe> userFavoriteRecipes) {
+    public void setUserFavoriteRecipes(ArrayList<Recipes> userFavoriteRecipes) {
         this.userFavoriteRecipes = userFavoriteRecipes;
     }
 }

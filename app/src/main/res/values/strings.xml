@@ -17,6 +17,25 @@
         <item>fingerfood</item>
         <item>snack</item>
         <item>drink</item>
+        <item>African</item>
+    </string-array>
+
+    <string-array name="ingredient">
+        <item>main course</item>
+        <item>side dish</item>
+        <item>dessert</item>
+        <item>appetizer</item>
+        <item>salad</item>
+        <item>bread</item>
+        <item>breakfast</item>
+        <item>soup</item>
+        <item>beverage</item>
+        <item>sauce</item>
+        <item>marinade</item>
+        <item>fingerfood</item>
+        <item>snack</item>
+        <item>drink</item>
+        <item>African</item>
     </string-array>
 
 </resources>

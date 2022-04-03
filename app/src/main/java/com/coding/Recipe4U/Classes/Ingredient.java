@@ -1,14 +1,13 @@
 package com.coding.Recipe4U.Classes;
 
 public class Ingredient {
-    private int ingredientNo, ingredientQty;
-    private String ingredientName, ingredientPicUrl;
+    private int ingredientNo;
+    private String ingredientName,ingredientQty;
 
-    public Ingredient(int ingredientNo, int ingredientQty, String ingredientName, String ingredientPicUrl) {
+    public Ingredient(int ingredientNo, String ingredientName, String ingredientQty) {
         this.ingredientNo = ingredientNo;
-        this.ingredientQty = ingredientQty;
         this.ingredientName = ingredientName;
-        this.ingredientPicUrl = ingredientPicUrl;
+        this.ingredientQty = ingredientQty;
     }
 
     public int getIngredientNo() {
@@ -19,14 +18,6 @@ public class Ingredient {
         this.ingredientNo = ingredientNo;
     }
 
-    public int getIngredientQty() {
-        return ingredientQty;
-    }
-
-    public void setIngredientQty(int ingredientQty) {
-        this.ingredientQty = ingredientQty;
-    }
-
     public String getIngredientName() {
         return ingredientName;
     }
@@ -35,12 +26,20 @@ public class Ingredient {
         this.ingredientName = ingredientName;
     }
 
-    public String getIngredientPicUrl() {
-        return ingredientPicUrl;
+    public String getIngredientQty() {
+        return ingredientQty;
     }
 
-    public void setIngredientPicUrl(String ingredientPicUrl) {
-        this.ingredientPicUrl = ingredientPicUrl;
+    public void setIngredientQty(String ingredientQty) {
+        this.ingredientQty = ingredientQty;
     }
 
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "ingredientNo=" + ingredientNo +
+                ", ingredientName='" + ingredientName + '\'' +
+                ", ingredientQty='" + ingredientQty + '\'' +
+                '}';
+    }
 }

@@ -37,7 +37,7 @@ public class RecipeInstructionAdapater extends RecyclerView.Adapter<RecipeInstru
     public void onBindViewHolder(@NonNull RecipeInstructionViewHolder holder, int position) {
         holder.textInstructionName.setText(recipeInstructionResponses.get(position).name);
         holder.recycleInstructionSteps.setHasFixedSize(true);
-        holder.recycleInstructionSteps.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        holder.recycleInstructionSteps.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         RecipeInstructionsStepsAdapater recipeInstructionsStepsAdapater = new RecipeInstructionsStepsAdapater(context, recipeInstructionResponses.get(position).steps);
         holder.recycleInstructionSteps.setAdapter(recipeInstructionsStepsAdapater);
     }

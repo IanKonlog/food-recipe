@@ -2,22 +2,25 @@ package com.coding.Recipe4U.Classes;
 
 import java.util.ArrayList;
 
-public class Recipe {
+public class Recipes {
 
-    private int recipeId, time, userId;
+    private int recipeId, time, userId,servings;
     private String name, description, typeOfCuisine, recipePicUrl;
 
     private ArrayList<Ingredient> ingredients;
     private ArrayList<RecipeSteps> recipeSteps;
 
+    private ApiRequestManager manager;
 
-    public Recipe(int recipeId, int time, int userId, String name,
-                  String description, String typeOfCuisine, String recipePicUrl,
-                  ArrayList<Ingredient> ingredients, ArrayList<RecipeSteps> recipeSteps) {
+
+    public Recipes(int recipeId, int time, int userId, String name,int servings,
+                   String description, String typeOfCuisine, String recipePicUrl,
+                   ArrayList<Ingredient> ingredients, ArrayList<RecipeSteps> recipeSteps) {
         this.recipeId = recipeId;
         this.time = time;
         this.userId = userId;
         this.name = name;
+        this.servings = servings;
         this.description = description;
         this.typeOfCuisine = typeOfCuisine;
         this.recipePicUrl = recipePicUrl;
@@ -103,25 +106,30 @@ public class Recipe {
 
     //TODO Add new Recipe to database and post it to API
     //Add New Recipe
-    public void addRecipe (int recipeId, String name, String description, String typeOfCuisine, int time, String recipePicUrl, int userId){
+    public void addRecipe (){
 
-    }
-
-    //TODO search with name in the API
-    public ArrayList<Recipe> searchWithName(String name){
-        return new ArrayList<Recipe>();
-    }
-
-    //TODO search with Ingredients API
-    public ArrayList<Recipe> searchWithIngredients(ArrayList<Ingredient> I){
-        return new ArrayList<Recipe>();
     }
 
     //TODO remove recipe to database
     public void deleteRecipe(int recipeId){
-        ArrayList<Recipe> r = new ArrayList<>();
+        ArrayList<Recipes> r = new ArrayList<>();
 
         r.remove(recipeId);
     }
 
+    @Override
+    public String toString() {
+        return "Recipes{" +
+                "recipeId=" + recipeId +
+                ", time=" + time +
+                ", userId=" + userId +
+                ", servings=" + servings +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", typeOfCuisine='" + typeOfCuisine + '\'' +
+                ", recipePicUrl='" + recipePicUrl + '\'' +
+                ", ingredients=" + ingredients +
+                ", recipeSteps=" + recipeSteps +
+                '}';
+    }
 }

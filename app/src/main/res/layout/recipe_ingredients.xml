@@ -30,8 +30,8 @@
         <ImageView
             android:id="@+id/image_ingredient"
             android:scaleType="center"
-            android:layout_width="80dp"
-            android:layout_height="50dp"/>
+            android:layout_width="120dp"
+            android:layout_height="70dp"/>
 
         <TextView
             android:id="@+id/text_ingredient_name"

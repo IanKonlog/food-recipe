@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class Favorite {
 
-    private ArrayList<Recipe> recipes;
+    private ArrayList<Recipes> recipes;
 
     public Favorite() {
         recipes = new ArrayList<>();
     }
 
-    public ArrayList<Recipe> getRecipes() {
+    public ArrayList<Recipes> getRecipes() {
         return recipes;
     }
 

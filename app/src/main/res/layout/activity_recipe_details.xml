@@ -56,6 +56,23 @@
                 android:layout_height="250dp"/>
 
             <TextView
+                android:text="Ingredients"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_recipe_ingredients"
+                android:background="@color/black"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
                 android:id="@+id/text_recipe_summary"
                 android:text="Summary"
                 android:textSize="14sp"
@@ -67,8 +84,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+
+            <TextView
+                android:text="Instructions"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_recipe_instructions"
+                android:background="@color/black"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -85,22 +114,6 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_recipe_similar"
-                android:layout_margin="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Ingredients"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:padding="10dp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_recipe_ingredients"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

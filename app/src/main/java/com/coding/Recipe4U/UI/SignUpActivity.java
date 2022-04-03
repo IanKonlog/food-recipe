@@ -12,8 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.coding.Recipe4U.Classes.Recipe;
-import com.coding.Recipe4U.Classes.User;
+import com.coding.Recipe4U.Classes.Recipes;
 import com.coding.Recipe4U.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
@@ -192,7 +191,7 @@ public class SignUpActivity extends AppCompatActivity {
             String phoneNo = regPhoneNo.getEditText().getText().toString().trim();
             String pass = regPassword.getEditText().getText().toString().trim();
 
-            ArrayList <Recipe> R = new ArrayList<>();
+            ArrayList <Recipes> R = new ArrayList<>();
 
             Intent intent = new Intent(getApplicationContext(),VerifyPhone.class);
             intent.putExtra("phoneNo", phoneNo);

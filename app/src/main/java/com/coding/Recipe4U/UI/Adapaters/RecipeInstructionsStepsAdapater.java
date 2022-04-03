@@ -36,7 +36,7 @@ public class RecipeInstructionsStepsAdapater extends RecyclerView.Adapter<Recipe
     public void onBindViewHolder(@NonNull RecipeInstructionsStepsViewHolder holder, int position) {
         holder.textInstructionStepNumber.setText(String.valueOf(steps.get(position).number));
         holder.textInstructionStepTitle.setText(steps.get(position).step);
-        holder.textInstructionStepLength.setText(steps.get(position).length.number + " "+ steps.get(position).length.unit);
+        //holder.textInstructionStepLength.setText(String.valueOf(steps.get(position).length.number) + " "+ steps.get(position).length.unit);
 
         holder.recyclerInstructionIngredients.setHasFixedSize(true);
         holder.recyclerInstructionIngredients.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
@@ -45,7 +45,7 @@ public class RecipeInstructionsStepsAdapater extends RecyclerView.Adapter<Recipe
 
 
         holder.recyclerInstructionEquipment.setHasFixedSize(true);
-        holder.recyclerInstructionEquipment.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        holder.recyclerInstructionEquipment.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         RecipeInstructionEquipmentAdapater recipeInstructionEquipmentAdapater = new RecipeInstructionEquipmentAdapater(context, steps.get(position).equipment);
         holder.recyclerInstructionEquipment.setAdapter(recipeInstructionEquipmentAdapater);
 
@@ -66,7 +66,7 @@ class RecipeInstructionsStepsViewHolder extends RecyclerView.ViewHolder{
         super(itemView);
         textInstructionStepNumber = itemView.findViewById(R.id.text_instruction_step_number);
         textInstructionStepTitle = itemView.findViewById(R.id.text_instruction_step_title);
-        textInstructionStepLength = itemView.findViewById(R.id.text_instruction_step_length);
+        //textInstructionStepLength = itemView.findViewById(R.id.text_instruction_step_length);
         recyclerInstructionEquipment = itemView.findViewById(R.id.recycler_instruction_equipment);
         recyclerInstructionIngredients = itemView.findViewById(R.id.recycler_instruction_Ingredients);
     }

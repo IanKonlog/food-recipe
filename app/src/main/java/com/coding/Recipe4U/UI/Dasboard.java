@@ -11,16 +11,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.coding.Recipe4U.Classes.ApiModelClasses.RandomRecipeApiResponse;
+import com.coding.Recipe4U.Classes.ApiModelClasses.RecipeByIngredientResponse;
 import com.coding.Recipe4U.Classes.ApiRequestManager;
 import com.coding.Recipe4U.Classes.Listeners.RandomRecipeResponseListener;
+import com.coding.Recipe4U.Classes.Listeners.RecipeByNameListener;
 import com.coding.Recipe4U.Classes.Listeners.RecipeClickListener;
 import com.coding.Recipe4U.R;
 import com.coding.Recipe4U.UI.Adapaters.RecipeAdapter;
+import com.coding.Recipe4U.UI.Adapaters.RecipeByIngredientAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -29,15 +35,29 @@ public class Dasboard extends AppCompatActivity {
     ProgressDialog dialog;
     ApiRequestManager manager;
     RecipeAdapter recipeAdapter;
+    RecipeByIngredientAdapter recipeByIngredientAdapter;
     RecyclerView recyclerView;
     Spinner spinner;
     ArrayList<String> tags = new ArrayList<>();
     SearchView searchView;
+    Button ingredientSearchButton;
+    ImageView recipeImage;
+    FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dasboard);
+        manager = new ApiRequestManager(this);
+
+        floatingActionButton = findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Dasboard.this, AddRecipe.class);
+                startActivity(intent);
+            }
+        });
 
         dialog = new ProgressDialog(this);
         dialog.setTitle("Loading.....");
@@ -46,9 +66,10 @@ public class Dasboard extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                tags.clear();
-                tags.add(query);
-                manager.getRandomRecipes(randomRecipeResponseListener, tags);
+                //tags.clear();
+                query.trim();
+                //tags.add(query);
+                manager.getRecipeByName(recipeByNameListener, query, "20");
                 dialog.show();
                 return true;
             }
@@ -59,7 +80,7 @@ public class Dasboard extends AppCompatActivity {
             }
         });
 
-        spinner = findViewById(R.id.tags_spinner);
+        /*spinner = findViewById(R.id.tags_spinner);
         ArrayAdapter arrayAdapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.tags,
@@ -72,9 +93,41 @@ public class Dasboard extends AppCompatActivity {
 
         manager = new ApiRequestManager(this);
         //manager.getRandomRecipes(randomRecipeResponseListener);
-        //dialog.show();
+        //dialog.show();*/
+
+        ingredientSearchButton = findViewById(R.id.ingredient_search_btn);
+        ingredientSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Dasboard.this, SearchByIngredients.class);
+                startActivity(intent);
+            }
+        });
+
+        //recipeImage = findViewById(R.id.recipe_image);
+
 
     }
+
+    private final RecipeByNameListener recipeByNameListener =  new RecipeByNameListener() {
+        @Override
+        public void didFetch(RecipeByIngredientResponse response, String message) {
+            dialog.dismiss();
+            recyclerView = findViewById(R.id.recycler_random);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new GridLayoutManager(Dasboard.this, 1));
+
+
+            recipeByIngredientAdapter = new RecipeByIngredientAdapter(Dasboard.this, response.results, recipeClickListener);
+
+            recyclerView.setAdapter(recipeByIngredientAdapter);
+        }
+
+        @Override
+        public void didError(String message) {
+            Toast.makeText(Dasboard.this, message, Toast.LENGTH_SHORT).show();
+        }
+    };
 
     private final RandomRecipeResponseListener randomRecipeResponseListener = new RandomRecipeResponseListener() {
         @Override
@@ -83,8 +136,6 @@ public class Dasboard extends AppCompatActivity {
             recyclerView = findViewById(R.id.recycler_random);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new GridLayoutManager(Dasboard.this, 1));
-
-
             recipeAdapter = new RecipeAdapter(Dasboard.this, response.recipes, recipeClickListener);
 
             recyclerView.setAdapter(recipeAdapter);
@@ -97,7 +148,7 @@ public class Dasboard extends AppCompatActivity {
     };
 
 
-    private final AdapterView.OnItemSelectedListener spinnerSelectedListener = new AdapterView.OnItemSelectedListener() {
+   /* private final AdapterView.OnItemSelectedListener spinnerSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
             tags.clear();
@@ -110,13 +161,13 @@ public class Dasboard extends AppCompatActivity {
         public void onNothingSelected(AdapterView<?> adapterView) {
 
         }
-    };
+    };*/
 
     private final RecipeClickListener recipeClickListener = new RecipeClickListener() {
         @Override
         public void onRecipeClicked(String id) {
             startActivity(new Intent(Dasboard.this, RecipeDetailsActivity.class)
-            .putExtra("id", id));
+                    .putExtra("id", id));
         }
     };
 }

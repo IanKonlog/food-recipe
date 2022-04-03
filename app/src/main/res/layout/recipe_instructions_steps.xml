@@ -36,15 +36,7 @@
                 android:padding="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/text_instruction_step_length"
-                android:text="Step Length"
-                android:textSize="18sp"
-                android:textAlignment="textEnd"
-                android:textColor="@color/app_color"
-                android:padding="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -53,7 +45,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:text="equipment"
+                android:text="Equipments"
                 android:textColor="@color/app_color"
                 android:textAlignment="textStart"
                 android:textSize="18sp"

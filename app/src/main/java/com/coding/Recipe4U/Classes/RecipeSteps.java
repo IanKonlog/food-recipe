@@ -2,13 +2,12 @@ package com.coding.Recipe4U.Classes;
 
 public class RecipeSteps {
 
-    private int StepNo,  stepDuration;
+    private int StepNo;
     private String stepDescription;
 
     //Constructor
-    public RecipeSteps(int stepNo, int stepDuration, String stepDescription) {
+    public RecipeSteps(int stepNo, String stepDescription) {
         StepNo = stepNo;
-        this.stepDuration = stepDuration;
         this.stepDescription = stepDescription;
     }
 
@@ -21,19 +20,19 @@ public class RecipeSteps {
         StepNo = stepNo;
     }
 
-    public int getStepDuration() {
-        return stepDuration;
-    }
-
-    public void setStepDuration(int stepDuration) {
-        this.stepDuration = stepDuration;
-    }
-
     public String getStepDescription() {
         return stepDescription;
     }
 
     public void setStepDescription(String stepDescription) {
         this.stepDescription = stepDescription;
+    }
+
+    @Override
+    public String toString() {
+        return "RecipeSteps{" +
+                "StepNo=" + StepNo +
+                ", stepDescription='" + stepDescription + '\'' +
+                '}';
     }
 }
