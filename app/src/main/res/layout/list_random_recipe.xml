@@ -56,7 +56,7 @@
                     android:id="@+id/servings_text"
                     android:textSize="14sp"
                     android:padding="10dp"
-                    android:text="2 Persons"
+                    android:text="2"
                     android:textColor="@color/app_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -104,7 +104,7 @@
                     android:id="@+id/time_text"
                     android:textSize="14sp"
                     android:padding="10dp"
-                    android:text="2 Minutes"
+                    android:text="2 Mins"
                     android:textColor="@color/app_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -129,7 +129,7 @@
                     android:id="@+id/fav_text"
                     android:textSize="14sp"
                     android:padding="10dp"
-                    android:text="Favorite"
+                    android:text="Fav"
                     android:textColor="@color/app_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>

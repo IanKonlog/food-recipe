@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.coding.Recipe4U.UI.Fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_fragmentCreateRecipes"
+            app:destination="@id/fragmentCreateRecipes" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.coding.Recipe4U.UI.Fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/byIngredientFragment"
+        android:name="com.coding.Recipe4U.UI.Fragments.ByIngredientFragment"
+        android:label="fragment_by_ingredient"
+        tools:layout="@layout/fragment_by_ingredient" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.coding.Recipe4U.UI.Fragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_favRecipesShowed"
+            app:destination="@id/favRecipesShowed" />
+        <action
+            android:id="@+id/action_profileFragment_to_createdRecipeShowed"
+            app:destination="@id/createdRecipeShowed" />
+    </fragment>
+    <fragment
+        android:id="@+id/favRecipesShowed"
+        android:name="com.coding.Recipe4U.UI.Fragments.FavRecipesShowed"
+        android:label="fragment_fav_recipes_showed"
+        tools:layout="@layout/fragment_fav_recipes_showed" >
+    </fragment>
+    <fragment
+        android:id="@+id/createdRecipeShowed"
+        android:name="com.coding.Recipe4U.UI.Fragments.CreatedRecipeShowed"
+        android:label="fragment_created_recipe_showed"
+        tools:layout="@layout/fragment_created_recipe_showed" >
+        <action
+            android:id="@+id/action_createdRecipeShowed_to_createdRecipeDetails"
+            app:destination="@id/createdRecipeDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/createdRecipeDetails"
+        android:name="com.coding.Recipe4U.UI.Fragments.CreatedRecipeDetails"
+        android:label="fragment_created_recipe_details"
+        tools:layout="@layout/fragment_created_recipe_details" />
+    <fragment
+        android:id="@+id/fragmentCreateRecipes"
+        android:name="com.coding.Recipe4U.UI.Fragments.FragmentAddRecipes"
+        android:label="fragment_create_recipes"
+        tools:layout="@layout/fragment_add_recipes" />
+    <fragment
+        android:id="@+id/fragmentRecipeDetails"
+        android:name="com.coding.Recipe4U.UI.Fragments.FragmentRecipeDetails"
+        android:label="fragment_recipe_details"
+        tools:layout="@layout/fragment_recipe_details" />
+    <fragment
+        android:id="@+id/fragmentRecipeByIngredient"
+        android:name="com.coding.Recipe4U.UI.Fragments.FragmentRecipeByIngredient"
+        android:label="fragment_recipe_by_ingredient"
+        tools:layout="@layout/fragment_recipe_by_ingredient" />
+</navigation>

@@ -1,11 +1,13 @@
 package com.coding.Recipe4U.UI.Adapaters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -15,6 +17,12 @@ import com.coding.Recipe4U.Classes.ApiModelClasses.Recipe;
 import com.coding.Recipe4U.Classes.ApiModelClasses.Result;
 import com.coding.Recipe4U.Classes.Listeners.RecipeClickListener;
 import com.coding.Recipe4U.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,6 +32,11 @@ public class RecipeByIngredientAdapter extends RecyclerView.Adapter<RecipeByIngr
     Context context;
     ArrayList<Result> recipes;
     RecipeClickListener listener;
+    DatabaseReference reference;
+    private Uri imageUri;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    String uID;
 
     public RecipeByIngredientAdapter(Context context, ArrayList<Result> recipes, RecipeClickListener listener) {
         this.context = context;
@@ -42,9 +55,9 @@ public class RecipeByIngredientAdapter extends RecyclerView.Adapter<RecipeByIngr
     public void onBindViewHolder(@NonNull RecipeByIngredientViewHolder holder, int position) {
         holder.recipeTitle.setText(recipes.get(position).title);
         holder.recipeTitle.setSelected(true);
-        holder.textLike.setText(recipes.get(position).aggregateLikes+" Likes");
-        holder.textServing.setText(recipes.get(position).servings+" Servings");
-        holder.textTime.setText(recipes.get(position).readyInMinutes+" Minutes");
+        holder.textLike.setText(recipes.get(position).aggregateLikes+"");
+        holder.textServing.setText(recipes.get(position).servings+"");
+        holder.textTime.setText(recipes.get(position).readyInMinutes+" Mins");
 
         Picasso.get().load(recipes.get(position).image).into(holder.recipeImage);
 
@@ -52,6 +65,24 @@ public class RecipeByIngredientAdapter extends RecyclerView.Adapter<RecipeByIngr
             @Override
             public void onClick(View view) {
                 listener.onRecipeClicked(String.valueOf(recipes.get(holder.getAdapterPosition()).id));
+            }
+        });
+
+        holder.randomListContainer.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                reference = FirebaseDatabase.getInstance().getReference("User");
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                // User user =  new User();
+                uID = firebaseUser.getUid().toString();
+
+                String key = reference.child(uID).child("favoriteRecipes").push().getKey();
+                reference.child(uID).child("favoriteRecipes").child(key).setValue(recipes.get(holder.getAdapterPosition()));
+
+                ImageView image = view.findViewById(R.id.fav_image);
+                image.setImageResource(R.drawable.ic_baseline_favorite_24_red);
+                Toast.makeText(view.getContext(), "Added to Favorites", Toast.LENGTH_LONG).show();
+                return true;
             }
         });
 

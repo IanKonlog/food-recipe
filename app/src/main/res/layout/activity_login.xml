@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.LoginActivity"
+    tools:context=".UI.Activities.LoginActivity"
     android:orientation="vertical"
     android:background="@color/white"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:id="@+id/to_show_snack">
 
     <ImageView
         android:id="@+id/logo_image"
@@ -60,14 +61,15 @@
         app:layout_constraintTop_toBottomOf="@+id/signPhrase">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/phoneNo"
+            android:id="@+id/email_login"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Phone Number">
+            android:hint="Email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
+                android:inputType="textEmailAddress"
                 android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -94,6 +96,7 @@
             android:layout_margin="5dp"
             android:background="#00000000"
             android:elevation="0dp"
+            android:id="@+id/forget_password_btn"
             android:text="Forget Password?"
             android:textColor="@color/app_color" />
 
