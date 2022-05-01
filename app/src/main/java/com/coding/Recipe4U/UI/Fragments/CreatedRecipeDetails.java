@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,6 +99,10 @@ public class CreatedRecipeDetails extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.slide_right));
+
         if (getArguments() != null) {
             //mParam1 = getArguments().getString(ARG_PARAM1);
             //mParam2 = getArguments().getString(ARG_PARAM2);

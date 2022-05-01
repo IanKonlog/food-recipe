@@ -2,7 +2,7 @@ package com.coding.Recipe4U.Classes.ApiModelClasses;
 
 import java.util.ArrayList;
 
-public class Recipe {
+public class Recipe implements Comparable {
     public boolean vegetarian;
     public boolean vegan;
     public boolean glutenFree;
@@ -40,4 +40,8 @@ public class Recipe {
     public Object originalId;
     public String spoonacularSourceUrl;
 
+    @Override
+    public int compareTo(Object o) {
+        return (this.aggregateLikes) - (((Recipe) o).aggregateLikes);
+    }
 }

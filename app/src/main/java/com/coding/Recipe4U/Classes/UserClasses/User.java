@@ -3,20 +3,21 @@ package com.coding.Recipe4U.Classes.UserClasses;
 import com.coding.Recipe4U.Classes.ApiModelClasses.Recipe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class User {
     private String name, userName, email, password, phoneNumber, profilePicture;
     private Map<String, Recipe> favoriteRecipes;
-    private Map<String,Recipes> userCreatedRecipes;
-    private ArrayList<UserLog> userLogs;
+    private Map<String, Recipes> userCreatedRecipes;
+    private HashMap<String, Integer> userLogs;
 
 
     public User(){}
 
     public User(String name, String userName, String email, String password, String phoneNumber
-            , String profilePicture, Map<String, Recipe> userFavoriteRecipes, Map<String,Recipes> userCreatedRecipes
-            , ArrayList<UserLog> userLogs) {
+            , String profilePicture, Map<String, Recipe> userFavoriteRecipes, Map<String, Recipes> userCreatedRecipes
+            , HashMap<String, Integer> userLogs) {
         this.name = name;
         this.userName = userName;
         this.email = email;
@@ -93,11 +94,11 @@ public class User {
         this.userCreatedRecipes = userCreatedRecipes;
     }
 
-    public ArrayList<UserLog> getUserLogs() {
+    public HashMap<String, Integer> getUserLogs() {
         return userLogs;
     }
 
-    public void setUserLogs(ArrayList<UserLog> userLogs) {
+    public void setUserLogs(HashMap<String, Integer> userLogs) {
         this.userLogs = userLogs;
     }
 }

@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,10 @@ public class CreatedRecipeShowed extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setExitTransition(inflater.inflateTransition(R.transition.fade));
+
         if (getArguments() != null) {
         }
     }
@@ -93,6 +98,7 @@ public class CreatedRecipeShowed extends Fragment {
 
         dialog = new ProgressDialog(getContext());
         dialog.setTitle("Loading.....");
+        dialog.show();
 
 
 
@@ -108,8 +114,8 @@ public class CreatedRecipeShowed extends Fragment {
                 if (user != null) {
                     if (user.getUserCreatedRecipes() != null) {
                         userCreatedRecipes = new HashMap<>(user.getUserCreatedRecipes());
-                        recipesCreated= new ArrayList<>(userCreatedRecipes.values());
-
+                        recipesCreated = new ArrayList<>(userCreatedRecipes.values());
+                        dialog.dismiss();
                         recyclerView = view.findViewById(R.id.recycler_random_create);
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
@@ -152,7 +158,7 @@ public class CreatedRecipeShowed extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString("key",key);
         fragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.fragmentContainerView,fragment);
+        fragmentTransaction.replace(R.id.fragmentContainerView, fragment).addToBackStack(null);
         fragmentTransaction.commit();
     }
 }

@@ -139,7 +139,7 @@ public class AddRecipe extends AppCompatActivity {
 
                     Toast.makeText(AddRecipe.this, "Recipe Created", Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(AddRecipe.this, TestActivity.class);
+                    Intent intent = new Intent(AddRecipe.this, MainDashboard.class);
                     startActivity(intent);
                     finish();
 

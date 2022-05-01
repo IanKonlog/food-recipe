@@ -1,40 +1,28 @@
 package com.coding.Recipe4U.Classes.UserClasses;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UserLog {
 
-    private String searchQuery;
-    private ArrayList<String> dishTypes;
-    private ArrayList<String> cuisines;
+    //private ArrayList<String> searchQuery;
+    private HashMap<String, Integer> logs;
 
-    public UserLog(String searchQuery, ArrayList<String> dishTypes, ArrayList<String> cuisines) {
-        this.searchQuery = searchQuery;
-        this.dishTypes = dishTypes;
-        this.cuisines = cuisines;
+    public UserLog() {
     }
 
-    public String getSearchQuery() {
-        return searchQuery;
+    public UserLog(HashMap<String, Integer> logs) {
+        this.logs = logs;
     }
 
-    public void setSearchQuery(String searchQuery) {
-        this.searchQuery = searchQuery;
+    public HashMap<String, Integer> getLogs() {
+        return logs;
     }
 
-    public ArrayList<String> getDishTypes() {
-        return dishTypes;
+    public void setLogs(HashMap<String, Integer> logs) {
+        this.logs = logs;
     }
 
-    public void setDishTypes(ArrayList<String> dishTypes) {
-        this.dishTypes = dishTypes;
-    }
+    //private ArrayList<String> dishTypes;
+    //private ArrayList<String> cuisines;
 
-    public ArrayList<String> getCuisines() {
-        return cuisines;
-    }
-
-    public void setCuisines(ArrayList<String> cuisines) {
-        this.cuisines = cuisines;
-    }
 }

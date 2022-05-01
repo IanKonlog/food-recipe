@@ -20,10 +20,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class VerifyPhone extends AppCompatActivity {
+public class VerifyEmail extends AppCompatActivity {
 
     private TextInputLayout user_OTP;
     private Button verifyBtn;
@@ -59,9 +60,10 @@ public class VerifyPhone extends AppCompatActivity {
                 }).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(VerifyPhone.this, "Reset Email Sent", Toast.LENGTH_LONG).show();
+                        Snackbar.make(getCurrentFocus(), "Reset Email Sent", Snackbar.LENGTH_SHORT);
+                        //Toast.makeText(VerifyEmail.this, "Reset Email Sent", Toast.LENGTH_LONG).show();
                         Log.d(TAG, "onSuccess: Email sent");
-                        Intent intent = new Intent(VerifyPhone.this, LoginActivity.class);
+                        Intent intent = new Intent(VerifyEmail.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
                     }

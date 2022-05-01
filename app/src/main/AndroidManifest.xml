@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Recipe4U">
         <activity
-            android:name=".UI.Activities.TestActivity"
+            android:name=".UI.Activities.MainDashboard"
             android:exported="false" />
         <activity
             android:name=".UI.Activities.AddRecipe"
@@ -35,7 +35,7 @@
             android:name=".UI.Activities.Dasboard"
             android:exported="false" />
         <activity
-            android:name=".UI.Activities.VerifyPhone"
+            android:name=".UI.Activities.VerifyEmail"
             android:exported="false" />
         <activity
             android:name=".UI.Activities.UserProfileActivity"

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +84,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
         }
 
@@ -181,7 +183,8 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to load data", Toast.LENGTH_LONG).show();
+                Snackbar.make(view, "Failed to load data", Snackbar.LENGTH_SHORT);
+                //Toast.makeText(getContext(), "Failed to load data", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -200,9 +203,15 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 changeProfile(view);
-
+                if (isNameChanged() || isPasswordChanged() || isPhoneChanged() || isUserNameChanged()) {
+                    Snackbar.make(view, "Data have been updated", Snackbar.LENGTH_SHORT);
+                    //Toast.makeText(getContext(), "Data has been updated", Toast.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(view, "Same data cannot be updated", Snackbar.LENGTH_SHORT);
+                    //Toast.makeText(getContext(), "Same data cannot be updated", Toast.LENGTH_LONG).show();
+                }
                 if (uploadedPicture) {
-                    Snackbar.make(view.findViewById(android.R.id.content), "Image successfully uploaded.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, "Image successfully uploaded.", Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -228,10 +237,16 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainerView,fragment);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in,
+                        R.anim.fade_out,
+                        R.anim.fade_in,
+                        R.anim.slide_out
+                );
+        fragmentTransaction.replace(R.id.fragmentContainerView, fragment).addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -303,8 +318,10 @@ public class ProfileFragment extends Fragment {
     //Update User Data
     public void update(View view) {
         if (isNameChanged() || isPasswordChanged() || isPhoneChanged() || isUserNameChanged()) {
+            Snackbar.make(view, "Data have been updated", Snackbar.LENGTH_SHORT);
             //Toast.makeText(getContext(), "Data has been updated", Toast.LENGTH_LONG).show();
         } else {
+            Snackbar.make(view, "Same data cannot be updated", Snackbar.LENGTH_SHORT);
             //Toast.makeText(getContext(), "Same data cannot be updated", Toast.LENGTH_LONG).show();
         }
     }
@@ -315,6 +332,7 @@ public class ProfileFragment extends Fragment {
             user = FirebaseAuth.getInstance().getCurrentUser();
             String newPassword = password.getEditText().getText().toString();
 
+
             user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -322,7 +340,8 @@ public class ProfileFragment extends Fragment {
                         reference.child(id).child("password").setValue(password.getEditText().getText().toString());
                         password.getEditText().setText(password.getEditText().getText().toString());
                         flag = true;
-                        Toast.makeText(getContext(), "Password Successfully Modified", Toast.LENGTH_LONG).show();
+                        //Snackbar.make(getView(),"Password Successfully Modified", Snackbar.LENGTH_SHORT);
+                        //Toast.makeText(getContext(), "Password Successfully Modified", Toast.LENGTH_LONG).show();
                     } else {
                         Log.d(TAG, "onComplete: " + task.getException());
                         flag = false;

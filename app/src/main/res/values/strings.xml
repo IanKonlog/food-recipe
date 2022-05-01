@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Recipe4U</string>
     <string name="api_key">99613445ed5d49d18d07f4a64d9dde69</string>
+    <!--<string name="api_key">99613445ed5d49d18d07f4a64d9dde69</string>-->
 
     <string-array name="tags">
         <item>main course</item>

@@ -15,10 +15,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +40,10 @@ import com.coding.Recipe4U.Classes.Misc.CSVFile;
 import com.coding.Recipe4U.Classes.UserClasses.RecipeSteps;
 import com.coding.Recipe4U.Classes.UserClasses.Recipes;
 import com.coding.Recipe4U.R;
-import com.coding.Recipe4U.UI.Activities.TestActivity;
+import com.coding.Recipe4U.UI.Activities.MainDashboard;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -59,7 +63,7 @@ public class FragmentAddRecipes extends Fragment {
 
     TextView addRecipeCuisine;
     LinearLayout layoutList, layoutListStep, layoutListPicture;
-    Button addRecipeIngredientAddBtn, addRecipeStepsAddBtn, addRecipeImageAddBtn,addRecipeCreateBtn;
+    Button addRecipeIngredientAddBtn, addRecipeStepsAddBtn, addRecipeImageAddBtn, addRecipeCreateBtn;
     ImageView addRecipeImage;
     final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -73,6 +77,7 @@ public class FragmentAddRecipes extends Fragment {
 
     ArrayList<String> cuisines;
     Dialog dialog;
+    ProgressDialog newDialog;
     ArrayList<String> ingredients;
     ArrayList<Ingredient> addedIngre;
     ArrayList<RecipeSteps> recipeSteps;
@@ -80,6 +85,7 @@ public class FragmentAddRecipes extends Fragment {
     ArrayList<Recipes> recipesCreated;
     int id;
     String uID;
+    boolean keY;
 
     public FragmentAddRecipes() {
         // Required empty public constructor
@@ -96,6 +102,10 @@ public class FragmentAddRecipes extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.slide_bottom));
+
         if (getArguments() != null) {
         }
     }
@@ -108,6 +118,7 @@ public class FragmentAddRecipes extends Fragment {
         reference = FirebaseDatabase.getInstance().getReference("User");
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        keY = false;
 
         addRecipeCuisine = view.findViewById(R.id.fragment_add_recipe_cuisine);
         layoutList = view.findViewById(R.id.layout_list);
@@ -127,6 +138,7 @@ public class FragmentAddRecipes extends Fragment {
         addedIngre = new ArrayList<>();
         recipeSteps = new ArrayList<>();
         recipesCreated = new ArrayList<>();
+        newDialog = new ProgressDialog(getContext());
 
         id = -1;
         imageFileName = "";
@@ -157,7 +169,7 @@ public class FragmentAddRecipes extends Fragment {
         addRecipeCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(proceedDetails() && proceedIng() && proceedSteps() && !imageFileName.equals("")){
+                if (proceedDetails() && proceedIng() && proceedSteps() && !imageFileName.equals("")) {
 
                     reference = FirebaseDatabase.getInstance().getReference("User");
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -165,22 +177,26 @@ public class FragmentAddRecipes extends Fragment {
                     uID = firebaseUser.getUid().toString();
 
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                    Recipes addedRecipe = new Recipes(uID+timeStamp,Integer.parseInt(addRecipeTime.getText().toString()),
-                            addRecipeName.getText().toString(),Integer.parseInt(addRecipeServings.getText().toString()),addRecipeSummary.getText().toString(), addRecipeCuisine.getText().toString(),
+                    Recipes addedRecipe = new Recipes(uID + timeStamp, Integer.parseInt(addRecipeTime.getText().toString()),
+                            addRecipeName.getText().toString(), Integer.parseInt(addRecipeServings.getText().toString()), addRecipeSummary.getText().toString(), addRecipeCuisine.getText().toString(),
                             imageFileName, addedIngre, recipeSteps);
 
                     recipesCreated.add(addedRecipe);
-                    System.out.println(addedRecipe);
+                    //System.out.println(addedRecipe);
 
                     //reference.child(uID).child("userCreatedRecipes").push().getKey().setValue(recipesCreated);
                     String key = reference.child(uID).child("userCreatedRecipes").push().getKey();
                     reference.child(uID).child("userCreatedRecipes").child(key).setValue(addedRecipe);
 
-                    Toast.makeText(getContext(), "Recipe Created", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), "Recipe Created", Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(getContext(), TestActivity.class);
-                    startActivity(intent);
-                    getActivity().finish();
+                    Snackbar.make(view, "Recipe Created", Snackbar.LENGTH_SHORT);
+
+                    keY = true;
+                    replaceFragment(new HomeFragment());
+
+                } else {
+                    Snackbar.make(view, "Please fill out all fields", Snackbar.LENGTH_SHORT);
                 }
             }
         });
@@ -201,11 +217,27 @@ public class FragmentAddRecipes extends Fragment {
         return view;
     }
 
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.fade_in,
+                        R.anim.slide_out,
+                        R.anim.slide_in,
+                        R.anim.fade_out
+                );
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("AddRecipe", keY);
+        fragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.fragmentContainerView, fragment);
+        fragmentTransaction.commit();
+    }
+
     private boolean proceedDetails() {
 
         if (!addRecipeName.getText().toString().equals("") && !addRecipeSummary.getText().toString().equals("")
                 && !addRecipeCuisine.getText().toString().equals("") && !String.valueOf(addRecipeTime.getText().toString()).equals("")
-                && !String.valueOf(addRecipeServings.getText().toString()).equals("")){
+                && !String.valueOf(addRecipeServings.getText().toString()).equals("")) {
 
             return true;
         }
@@ -218,17 +250,21 @@ public class FragmentAddRecipes extends Fragment {
         boolean proceed = true;
         String instruc;
 
-        for (int i=0; i<layoutListStep.getChildCount(); i++){
+
+        for (int i = 0; i < layoutListStep.getChildCount(); i++) {
             View stepView = layoutListStep.getChildAt(i);
 
             EditText instruction = (EditText) stepView.findViewById(R.id.add_recipe_instruction);
 
-            if(!instruction.getText().toString().equals("")){
+            if (!instruction.getText().toString().equals("")) {
                 instruc = instruction.getText().toString();
-            }
-            else{
+            } else {
                 proceed = false;
                 break;
+            }
+
+            if (layoutListStep.getChildCount() == 0) {
+                proceed = false;
             }
 
             RecipeSteps recipeStep = new RecipeSteps(i, instruc);
@@ -246,39 +282,39 @@ public class FragmentAddRecipes extends Fragment {
         String quant;
         String ing;
 
-        for (int i=0; i<layoutList.getChildCount(); i++){
+        for (int i = 0; i < layoutList.getChildCount(); i++) {
             View ingredientView = layoutList.getChildAt(i);
             EditText ingred = (EditText) ingredientView.findViewById(R.id.recipe_add_ingredient);
             EditText qty = (EditText) ingredientView.findViewById(R.id.add_recipe_quantity);
 
             id = ingredients.indexOf(ingred.getText().toString()) + 1;
 
-            if(!ingred.getText().toString().equals("")){
+            if (!ingred.getText().toString().equals("")) {
                 ing = ingred.getText().toString();
-            }
-            else{
+            } else {
                 proceed = false;
                 break;
             }
-            if(!qty.getText().toString().equals("")) {
+            if (!qty.getText().toString().equals("")) {
                 quant = qty.getText().toString();
-            }
-            else{
+            } else {
                 proceed = false;
                 break;
             }
 
-            if(id != -1) {
+            if (id != -1) {
                 ingredientAndId = ingredientsWithId.get(id);
                 ingredientId = ingredientAndId[1];
-            }
-            else{
+            } else {
                 proceed = false;
                 break;
             }
 
+            if (layoutList.getChildCount() == 0) {
+                proceed = false;
+            }
             // Ingredient ingredient = new Ingredient(Integer.parseInt(ingredientId),ing,quant);
-            Ingredient ingredient = new Ingredient(id,ing,quant);
+            Ingredient ingredient = new Ingredient(id, ing, quant);
             addedIngre.add(ingredient);
         }
 
@@ -298,7 +334,7 @@ public class FragmentAddRecipes extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null){
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
 
             imageUri = data.getData();
 
@@ -311,9 +347,9 @@ public class FragmentAddRecipes extends Fragment {
             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             // User user =  new User();
             uID = firebaseUser.getUid().toString();
-            imageFileName = "JPEG_"+uID+timeStamp+"_.jpg";
+            imageFileName = "JPEG_" + uID + timeStamp + "_.jpg";
 
-            StorageReference createdRec = storageReference.child("createdRecipes/"+imageFileName);
+            StorageReference createdRec = storageReference.child("createdRecipes/" + imageFileName);
             addRecipeImage.setDrawingCacheEnabled(true);
             addRecipeImage.buildDrawingCache();
             Bitmap bitmap = ((BitmapDrawable) addRecipeImage.getDrawable()).getBitmap();
@@ -341,6 +377,7 @@ public class FragmentAddRecipes extends Fragment {
 
         ProgressDialog pd = new ProgressDialog(getContext());
         pd.setTitle("Creating Recipe....");
+        pd.show();
 
 
         StorageReference profileRef = storageReference.child("CreatedRecipes/").child(imageFileName);
@@ -359,7 +396,8 @@ public class FragmentAddRecipes extends Fragment {
             @Override
             public void onFailure(@NonNull Exception e) {
                 pd.dismiss();
-                Toast.makeText(getContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getView(), "Failed to Upload picture", Snackbar.LENGTH_SHORT);
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -411,7 +449,6 @@ public class FragmentAddRecipes extends Fragment {
     }
 
 
-
     private void listenerAddIngredient(EditText recipeAddIngredient) {
         recipeAddIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -420,7 +457,7 @@ public class FragmentAddRecipes extends Fragment {
 
                 dialog.setContentView(R.layout.ingredient_search_spinner);
 
-                dialog.getWindow().setLayout(700,900);
+                dialog.getWindow().setLayout(700, 900);
 
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -469,7 +506,7 @@ public class FragmentAddRecipes extends Fragment {
 
                 dialog.setContentView(R.layout.cuisine_search_spinner);
 
-                dialog.getWindow().setLayout(700,900);
+                dialog.getWindow().setLayout(700, 900);
 
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 

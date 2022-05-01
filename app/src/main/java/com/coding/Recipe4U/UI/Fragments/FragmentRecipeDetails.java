@@ -1,15 +1,21 @@
 package com.coding.Recipe4U.UI.Fragments;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +31,28 @@ import com.coding.Recipe4U.Classes.Listeners.RecipeDetailsListener;
 import com.coding.Recipe4U.Classes.Listeners.RecipeInstructionsListener;
 import com.coding.Recipe4U.Classes.Listeners.RecipeSimilarListener;
 import com.coding.Recipe4U.Classes.UserClasses.ApiRequestManager;
+import com.coding.Recipe4U.Classes.UserClasses.Recipes;
+import com.coding.Recipe4U.Classes.UserClasses.User;
+import com.coding.Recipe4U.Classes.UserClasses.UserLog;
 import com.coding.Recipe4U.R;
 import com.coding.Recipe4U.UI.Activities.RecipeDetailsActivity;
 import com.coding.Recipe4U.UI.Adapaters.IngredientAdapter;
 import com.coding.Recipe4U.UI.Adapaters.RecipeInstructionAdapater;
 import com.coding.Recipe4U.UI.Adapaters.RecipeSimilarAdapter;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FragmentRecipeDetails extends Fragment {
 
@@ -48,6 +68,11 @@ public class FragmentRecipeDetails extends Fragment {
     RecipeInstructionAdapater recipeInstructionAdapater;
     String key;
 
+    private DatabaseReference reference;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+    private String ID;
+
     public FragmentRecipeDetails() {
         // Required empty public constructor
     }
@@ -62,6 +87,10 @@ public class FragmentRecipeDetails extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.slide_right));
+
         if (getArguments() != null) {
         }
     }
@@ -109,10 +138,52 @@ public class FragmentRecipeDetails extends Fragment {
             textRecipeSource.setText(response.sourceName);
             textRecipeSummary.setText(response.summary);
 
+            reference = FirebaseDatabase.getInstance().getReference("User");
+            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            ID = firebaseUser.getUid().toString();
+            ArrayList<String> dishes = response.dishTypes;
+
+            reference.child(ID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = snapshot.getValue(User.class);
+
+                    if (user != null) {
+                        if (user.getUserLogs() != null) {
+                            HashMap<String, Integer> logs = user.getUserLogs();
+                            //HashMap<String, Integer> log = (HashMap<String, Integer>)logs.getLogs();
+                            Log.d(TAG, "onDataChange: " + logs.toString());
+
+                            for (String dish : dishes) {
+                                if (logs.containsKey(dish)) {
+                                    logs.put(dish, logs.get(dish) + 1);
+                                } else {
+                                    logs.put(dish, 1);
+                                }
+                            }
+                            reference.child(ID).child("userLogs").setValue(logs);
+                        } else {
+                            HashMap<String, Integer> log = new HashMap<>();
+                            for (String dish : dishes) {
+                                log.put(dish, 1);
+                            }
+
+                            reference.child(ID).child("userLogs").setValue(log);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Snackbar.make(getView(), "Failed to load data", Snackbar.LENGTH_SHORT);
+                    //Toast.makeText(getContext(), "Failed to load data", Toast.LENGTH_LONG).show();
+                }
+            });
+
             Picasso.get().load(response.image).into(imageRecipeDetails);
 
             recyclerRecipeIngredients.setHasFixedSize(true);
-            recyclerRecipeIngredients.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
+            recyclerRecipeIngredients.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
             ingredientAdapter = new IngredientAdapter(getContext(), response.extendedIngredients);
             recyclerRecipeIngredients.setAdapter(ingredientAdapter);

@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +22,14 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.coding.Recipe4U.Classes.ApiModelClasses.RandomRecipeApiResponse;
+import com.coding.Recipe4U.Classes.ApiModelClasses.Recipe;
 import com.coding.Recipe4U.Classes.ApiModelClasses.RecipeByIngredientResponse;
 import com.coding.Recipe4U.Classes.ApiModelClasses.Result;
 import com.coding.Recipe4U.Classes.UserClasses.ApiRequestManager;
 import com.coding.Recipe4U.Classes.Listeners.RandomRecipeResponseListener;
 import com.coding.Recipe4U.Classes.Listeners.RecipeByNameListener;
 import com.coding.Recipe4U.Classes.Listeners.RecipeClickListener;
+import com.coding.Recipe4U.Classes.UserClasses.Recommendation;
 import com.coding.Recipe4U.R;
 import com.coding.Recipe4U.UI.Adapaters.RecipeAdapter;
 import com.coding.Recipe4U.UI.Adapaters.RecipeByIngredientAdapter;
@@ -103,6 +106,8 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setExitTransition(inflater.inflateTransition(R.transition.fade));
 
 
         if (getArguments() != null) {
@@ -125,10 +130,10 @@ public class SearchFragment extends Fragment {
         searchView = view.findViewById(R.id.search_dash);
         manager = new ApiRequestManager(getContext());
         dialog = new ProgressDialog(getContext());
+        dialog.setTitle("Loading....");
+        dialog.show();
+        manager.getRandomRecipes(randomRecipeResponseListener, tags);
 
-        manager.getRandomRecipes(randomRecipeResponseListener,tags);
-
-        dialog.setTitle("Loading.....");
         recyclerView = view.findViewById(R.id.recycler_random);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -136,9 +141,8 @@ public class SearchFragment extends Fragment {
                 //tags.clear();
                 query.trim();
                 //tags.add(query);
-
                 manager.getRecipeByName(recipeByNameListener, query, "20");
-                dialog.show();
+
                 //initRecyclerView(view);
                 return true;
             }
@@ -159,8 +163,9 @@ public class SearchFragment extends Fragment {
             dialog.dismiss();
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
-
-            recipeByIngredientAdapter = new RecipeByIngredientAdapter(getContext(), response.results, recipeClickListener);
+            Recommendation recommendation = new Recommendation();
+            ArrayList<Result> resu = recommendation.sortByPopularity1(response.results);
+            recipeByIngredientAdapter = new RecipeByIngredientAdapter(getContext(), resu, recipeClickListener);
             results = new ArrayList<>(response.results);
             recyclerView.setAdapter(recipeByIngredientAdapter);
         }
@@ -175,17 +180,18 @@ public class SearchFragment extends Fragment {
         @Override
         public void didFetch(RandomRecipeApiResponse response, String message) {
             dialog.dismiss();
-
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
-            recipeAdapter = new RecipeAdapter(getContext(), response.recipes, recipeClickListener,onItemLongClickListener);
+            Recommendation recommendation = new Recommendation();
+            ArrayList<Recipe> resu = recommendation.sortByPopularity(response.recipes);
+            recipeAdapter = new RecipeAdapter(getContext(), resu, recipeClickListener, onItemLongClickListener);
 
             recyclerView.setAdapter(recipeAdapter);
         }
 
         @Override
         public void didError(String message) {
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -199,14 +205,20 @@ public class SearchFragment extends Fragment {
         }
     };
 
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in,
+                        R.anim.fade_out,
+                        R.anim.fade_in,
+                        R.anim.slide_out
+                );
 
         Bundle bundle = new Bundle();
-        bundle.putString("key",key);
+        bundle.putString("key", key);
         fragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.fragmentContainerView,fragment);
+        fragmentTransaction.replace(R.id.fragmentContainerView, fragment).addToBackStack(null);
         fragmentTransaction.commit();
     }
 

@@ -8,18 +8,19 @@
     <EditText
         android:id="@+id/recipe_add_ingredient"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:layout_weight="1"
         android:background="@android:drawable/editbox_background"
         android:hint="Ingredient"
         android:padding="12dp"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:layout_marginTop="5dp" />
 
     <com.google.android.material.textfield.TextInputLayout
 
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="55dp"
         android:layout_margin="5dp"
         android:hint="Quantity"
         android:layout_weight="1">

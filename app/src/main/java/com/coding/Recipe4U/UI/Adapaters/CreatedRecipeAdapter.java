@@ -20,6 +20,7 @@ import com.coding.Recipe4U.Classes.UserClasses.User;
 import com.coding.Recipe4U.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -125,7 +126,8 @@ public class CreatedRecipeAdapter extends RecyclerView.Adapter<CreatedRecipeView
                                             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                                 recipes.remove(holder.getAdapterPosition());
                                                 notifyDataSetChanged();
-                                                Toast.makeText(view.getContext(), "Removed Successfully", Toast.LENGTH_LONG).show();
+                                                Snackbar.make(view, "Recipe removed successfully", Snackbar.LENGTH_SHORT).show();
+                                                //Toast.makeText(view.getContext(), "Removed Successfully", Toast.LENGTH_LONG).show();
                                             }
                                         });
                                         break;

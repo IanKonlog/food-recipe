@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -204,77 +205,79 @@ public class SignUpActivity extends AppCompatActivity {
         reference = rootNode.getReference().child("User");
         //System.out.println(reference.getDatabase());
 
-
+        //!validateEmail() ||
         if (!validateEmail() || !validateUserName() || !validatePassword() || !validatePhoneNo()) {
             return;
-        }
-        //Get Values from Text fields
-        String userName = regUserName.getEditText().getText().toString().trim();
-        String email = regEmail.getEditText().getText().toString().trim();
-        String phoneNo = regPhoneNo.getEditText().getText().toString().trim();
-        String pass = regPassword.getEditText().getText().toString().trim();
-        String urlPicture = "";
-        HashMap<String, Recipe> userFavoriteRecipes = new HashMap<>();
-        HashMap<String,Recipes> userCreatedRecipes = new HashMap<>();
-        Ingredient ing = new Ingredient(0,"testtt","2");
-        ArrayList<Ingredient> addIng = new ArrayList<>();
-        addIng.add(ing);
+        } else {
+            //Get Values from Text fields
+            String userName = regUserName.getEditText().getText().toString().trim();
+            String email = regEmail.getEditText().getText().toString().trim();
+            String phoneNo = regPhoneNo.getEditText().getText().toString().trim();
+            String pass = regPassword.getEditText().getText().toString().trim();
+            String urlPicture = "";
+            HashMap<String, Recipe> userFavoriteRecipes = new HashMap<>();
+            HashMap<String, Recipes> userCreatedRecipes = new HashMap<>();
+            Ingredient ing = new Ingredient(0, "testtt", "2");
+            ArrayList<Ingredient> addIng = new ArrayList<>();
+            addIng.add(ing);
 
-        RecipeSteps recipeSteps = new RecipeSteps(0,"testing Recipe");
-        ArrayList<RecipeSteps> rec = new ArrayList<>();
-        rec.add(recipeSteps);
-        //Recipes recipes = new Recipes("eef",1,0,"test",2,"Asian","test","test",addIng,rec);
-        //userCreatedRecipes.add(recipes);
+            RecipeSteps recipeSteps = new RecipeSteps(0, "testing Recipe");
+            ArrayList<RecipeSteps> rec = new ArrayList<>();
+            rec.add(recipeSteps);
 
-
-        ArrayList<UserLog> userLogs = new ArrayList<>();
+            // ArrayList<UserLog> userLogs = new ArrayList<>();
+            HashMap<String, Integer> userLogs = new HashMap<>();
 
 
-        firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-
-                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    firebaseUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(SignUpActivity.this, "Verification email sent", Toast.LENGTH_LONG).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "onFailure: Email not sent" + e.getMessage());
-                        }
-                    });
-
-
-                    User user = new User("", userName, email, pass, phoneNo, urlPicture, userFavoriteRecipes, userCreatedRecipes, userLogs);
-                    reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-
-                                Toast.makeText(SignUpActivity.this, "User Registered! Sign In!", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-
-                                intent.putExtra("name", "");
-                                intent.putExtra("email", email);
-                                intent.putExtra("phoneNo", phoneNo);
-                                intent.putExtra("password", pass);
-                                intent.putExtra("userName", userName);
-                                startActivity(intent);
-                                dialog.dismiss();
-                                finish();
-                            } else {
-                                Toast.makeText(SignUpActivity.this, "Failed to Register User", Toast.LENGTH_LONG).show();
+            firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                        firebaseUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                //Snackbar.make(view,"Verification email sent", Snackbar.LENGTH_SHORT);
+                                Toast.makeText(SignUpActivity.this, "Verification email sent", Toast.LENGTH_LONG).show();
                             }
-                        }
-                    });
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "onFailure: Email not sent" + e.getMessage());
+                            }
+                        });
 
+
+                        User user = new User("", userName, email, pass, phoneNo, urlPicture, userFavoriteRecipes, userCreatedRecipes, userLogs);
+                        reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Snackbar.make(getCurrentFocus(), "User Registered! Sign In!", Snackbar.LENGTH_SHORT);
+                                    //Toast.makeText(SignUpActivity.this, "User Registered! Sign In!", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+
+                                    intent.putExtra("name", "");
+                                    intent.putExtra("email", email);
+                                    intent.putExtra("phoneNo", phoneNo);
+                                    intent.putExtra("password", pass);
+                                    intent.putExtra("userName", userName);
+                                    startActivity(intent);
+                                    dialog.dismiss();
+                                    finish();
+                                } else {
+                                    Log.d(TAG, "onFailure: Cannot Register User");
+                                    Snackbar.make(getCurrentFocus(), "Failed to Register User", Snackbar.LENGTH_SHORT);
+                                    //Toast.makeText(SignUpActivity.this, "Failed to Register User", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+
+                    }
                 }
-            }
-        });
+            });
+
+        }
 
 
         //reference.child(String.valueOf((1))).setValue(user);

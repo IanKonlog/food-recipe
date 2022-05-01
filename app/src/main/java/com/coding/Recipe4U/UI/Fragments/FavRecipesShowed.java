@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,10 @@ public class FavRecipesShowed extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setExitTransition(inflater.inflateTransition(R.transition.fade));
+
         if (getArguments() != null) {
         }
     }
@@ -94,6 +99,7 @@ public class FavRecipesShowed extends Fragment {
         View view = inflater.inflate(R.layout.fragment_fav_recipes_showed, container, false);
         dialog = new ProgressDialog(getContext());
         dialog.setTitle("Loading.....");
+        dialog.show();
 
 
 
@@ -111,7 +117,7 @@ public class FavRecipesShowed extends Fragment {
                         userFavRecipes = new HashMap<>(user.getFavoriteRecipes());
                         recipesFavorites = new ArrayList<>(userFavRecipes.values());
 
-                        System.out.println("Inside");
+                        dialog.dismiss();
                         recyclerView = view.findViewById(R.id.recycler_random_fav);
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
@@ -153,7 +159,7 @@ public class FavRecipesShowed extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString("key",key);
         fragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.fragmentContainerView,fragment);
+        fragmentTransaction.replace(R.id.fragmentContainerView, fragment).addToBackStack(null);
         fragmentTransaction.commit();
     }
 

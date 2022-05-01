@@ -18,6 +18,7 @@ import com.coding.Recipe4U.Classes.ApiModelClasses.Recipe;
 import com.coding.Recipe4U.Classes.Listeners.RecipeClickListener;
 import com.coding.Recipe4U.Classes.UserClasses.User;
 import com.coding.Recipe4U.R;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -105,7 +106,8 @@ public class FavoriteRecipeAdapter extends RecyclerView.Adapter<FavoriteRecipeVi
                                             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                                 recipes.remove(holder.getAdapterPosition());
                                                 notifyDataSetChanged();
-                                                Toast.makeText(view.getContext(), "Removed Successfully", Toast.LENGTH_LONG).show();
+                                                Snackbar.make(view, "Recipe Removed successfully", Snackbar.LENGTH_SHORT).show();
+                                                //Toast.makeText(view.getContext(), "Removed Successfully", Toast.LENGTH_LONG).show();
                                             }
                                         });
                                         break;
@@ -113,21 +115,28 @@ public class FavoriteRecipeAdapter extends RecyclerView.Adapter<FavoriteRecipeVi
                                 }
 
                             }
+
+                            if (user.getUserLogs() != null) {
+                                ArrayList<String> dishes = recipes.get(holder.getAdapterPosition()).dishTypes;
+                                HashMap<String, Integer> logs = (HashMap<String, Integer>) user.getUserLogs();
+
+                                for (String dish : dishes) {
+                                    if (logs.containsKey(dish) && logs.get(dish) > 0) {
+                                        logs.put(dish, logs.get(dish) - 1);
+                                    }
+                                }
+
+                                reference.child(uID).child("userLogs").setValue(logs);
+                            }
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(view.getContext(), "Failed to load data", Toast.LENGTH_LONG).show();
+                        Snackbar.make(view, "Failed to load data", Snackbar.LENGTH_SHORT).show();
+                        //Toast.makeText(view.getContext(), "Failed to load data", Toast.LENGTH_LONG).show();
                     }
                 });
-
-                //String key = reference.child(uID).child("favoriteRecipes").push().getKey();
-                //reference.child(uID).child("favoriteRecipes").child(key).setValue(recipes.get(holder.getAdapterPosition()));
-
-                //ImageView image = view.findViewById(R.id.fav_image);
-                //image.setImageResource(R.drawable.ic_baseline_favorite_24_red);
-                //Toast.makeText(view.getContext(), "Added to Favorites", Toast.LENGTH_LONG).show();
             }
         });
     }

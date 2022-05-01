@@ -134,12 +134,18 @@ public class ByIngredientFragment extends Fragment {
 
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in,
+                        R.anim.fade_out,
+                        R.anim.fade_in,
+                        R.anim.slide_out
+                );
 
         Bundle bundle = new Bundle();
-        bundle.putString("ingr",key);
+        bundle.putString("ingr", key);
         fragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.fragmentContainerView,fragment);
+        fragmentTransaction.replace(R.id.fragmentContainerView, fragment).addToBackStack(null);
         fragmentTransaction.commit();
     }
 

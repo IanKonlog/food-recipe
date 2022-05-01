@@ -1,7 +1,10 @@
 package com.coding.Recipe4U.UI.Adapaters;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +19,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.coding.Recipe4U.Classes.ApiModelClasses.Recipe;
 import com.coding.Recipe4U.Classes.Listeners.RecipeClickListener;
+import com.coding.Recipe4U.Classes.UserClasses.User;
+import com.coding.Recipe4U.Classes.UserClasses.UserLog;
 import com.coding.Recipe4U.R;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
 
@@ -78,12 +88,49 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeViewHolder> {
                 // User user =  new User();
                 uID = firebaseUser.getUid().toString();
 
+                ArrayList<String> dishes = recipes.get(holder.getAdapterPosition()).dishTypes;
+                Log.d(TAG, "onLongClick: RecipeAdaptaer" + dishes.toString());
+
+                reference.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User user = snapshot.getValue(User.class);
+                        Log.d(TAG, "onDataChange: Fav");
+                        if (user != null) {
+                            if (user.getUserLogs() != null) {
+                                HashMap<String, Integer> logs = user.getUserLogs();
+                                for (String dish : dishes) {
+                                    if (logs.containsKey(dish)) {
+                                        logs.put(dish, logs.get(dish) + 1);
+                                    } else {
+                                        logs.put(dish, 1);
+                                    }
+                                }
+                                reference.child(uID).child("userLogs").setValue(logs);
+                            } else {
+                                HashMap<String, Integer> log = new HashMap<>();
+                                for (String dish : dishes) {
+                                    log.put(dish, 1);
+                                }
+                                reference.child(uID).child("userLogs").setValue(log);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Snackbar.make(view, "Failed to load data", Snackbar.LENGTH_SHORT).show();
+                        //Toast.makeText(view.getContext(), "Failed to load data", Toast.LENGTH_LONG).show();
+                    }
+                });
+
                 String key = reference.child(uID).child("favoriteRecipes").push().getKey();
                 reference.child(uID).child("favoriteRecipes").child(key).setValue(recipes.get(holder.getAdapterPosition()));
 
                 ImageView image = view.findViewById(R.id.fav_image);
                 image.setImageResource(R.drawable.ic_baseline_favorite_24_red);
-                Toast.makeText(view.getContext(), "Added to Favorites", Toast.LENGTH_LONG).show();
+                Snackbar.make(view, "Recipe Added to Favorites", Snackbar.LENGTH_SHORT).show();
+                //Toast.makeText(view.getContext(), "Added to Favorites", Toast.LENGTH_LONG).show();
                 return true;
             }
         });

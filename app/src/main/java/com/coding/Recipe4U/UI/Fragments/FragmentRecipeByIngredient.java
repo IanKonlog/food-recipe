@@ -11,21 +11,26 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.coding.Recipe4U.Classes.ApiModelClasses.RecipeByIngredientResponse;
+import com.coding.Recipe4U.Classes.ApiModelClasses.Result;
 import com.coding.Recipe4U.Classes.Listeners.RecipeByIngredientListener;
 import com.coding.Recipe4U.Classes.Listeners.RecipeClickListener;
 import com.coding.Recipe4U.Classes.UserClasses.ApiRequestManager;
+import com.coding.Recipe4U.Classes.UserClasses.Recommendation;
 import com.coding.Recipe4U.R;
 import com.coding.Recipe4U.UI.Activities.RecipeByIngredient;
 import com.coding.Recipe4U.UI.Activities.RecipeDetailsActivity;
 import com.coding.Recipe4U.UI.Adapaters.RecipeByIngredientAdapter;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -59,6 +64,9 @@ public class FragmentRecipeByIngredient extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setExitTransition(inflater.inflateTransition(R.transition.fade));
+
         if (getArguments() != null) {
         }
     }
@@ -73,6 +81,7 @@ public class FragmentRecipeByIngredient extends Fragment {
 
         dialog = new ProgressDialog(getContext());
         dialog.setTitle("Loading.....");
+        dialog.show();
 
         Bundle bundle = getArguments();
         query = bundle.getString("ingr");
@@ -90,14 +99,16 @@ public class FragmentRecipeByIngredient extends Fragment {
             dialog.dismiss();
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
-
-            recipeAdapter = new RecipeByIngredientAdapter(getContext(), response.results, recipeClickListener);
+            Recommendation recommendation = new Recommendation();
+            ArrayList<Result> resu = recommendation.sortByPopularity1(response.results);
+            recipeAdapter = new RecipeByIngredientAdapter(getContext(), resu, recipeClickListener);
             recyclerView.setAdapter(recipeAdapter);
         }
 
         @Override
         public void didError(String message) {
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            //Snackbar.make(getView(),message)
+            //Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -105,20 +116,27 @@ public class FragmentRecipeByIngredient extends Fragment {
         @Override
         public void onRecipeClicked(String id) {
             //startActivity(new Intent(getContext(), RecipeDetailsActivity.class)
-              //      .putExtra("id", id));
+            //      .putExtra("id", id));
             key = id;
             replaceFragment(new FragmentRecipeDetails());
         }
     };
 
-    private void replaceFragment(Fragment fragment){
+    public final AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+            return true;
+        }
+    };
+
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         Bundle bundle = new Bundle();
-        bundle.putString("key",key);
+        bundle.putString("key", key);
         fragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.fragmentContainerView,fragment);
+        fragmentTransaction.replace(R.id.fragmentContainerView, fragment).addToBackStack(null);
         fragmentTransaction.commit();
     }
 }

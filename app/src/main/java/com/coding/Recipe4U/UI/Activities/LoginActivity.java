@@ -24,26 +24,21 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
     private Button signUp, logIn, forgotPasswordBtn;
     private ImageView image;
     private TextView logoText, signInText;
-
-    private TextInputLayout loginPhoneNo, loginPassword, loginEmail; // Login variables
-
-    private FirebaseDatabase rootNode;
-    private DatabaseReference reference;
-
+    private TextInputLayout loginPassword, loginEmail; // Login variables
     private ProgressDialog dialog;
     SharedPreferences sp;
+    boolean isLoggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //Remove the status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_login);
-
         //Hooks for animation to Sign up screen
         signUp = findViewById(R.id.signUpBtn);
         logIn = findViewById(R.id.loginBtn);
@@ -63,17 +56,16 @@ public class LoginActivity extends AppCompatActivity {
         forgotPasswordBtn = findViewById(R.id.forget_password_btn);
 
         //Variables to login
-        //loginPhoneNo = findViewById(R.id.phoneNo);
         loginEmail = findViewById(R.id.email_login);
         loginPassword = findViewById(R.id.password);
 
         dialog = new ProgressDialog(this);
 
-        sp = getSharedPreferences("login",0);
-        boolean isLoggedIn = sp.getBoolean("loggedIn",false);
+        sp = getSharedPreferences("login", 0);
+        isLoggedIn = sp.getBoolean("loggedIn", false);
 
         if (isLoggedIn){
-            Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainDashboard.class);
             startActivity(intent);
             finish();
         }
@@ -97,14 +89,14 @@ public class LoginActivity extends AppCompatActivity {
         forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, VerifyPhone.class);
+                Intent intent = new Intent(LoginActivity.this, VerifyEmail.class);
                 startActivity(intent);
             }
         });
     }
 
     //Validate Username
-    private Boolean validateEmail() {
+    public Boolean validateEmail() {
         String val = loginEmail.getEditText().getText().toString();
         String emailPattern = "[a-z-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
@@ -122,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Validate password
-    private Boolean validatePassword() {
+    public Boolean validatePassword() {
         String val = loginPassword.getEditText().getText().toString();
 
         if (val.isEmpty()) {
@@ -143,13 +135,9 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             isUser();
         }
-
-
-        //User user = new User("", userName, email, pass, phoneNo, "", "");
-        //reference.child(phoneNo).setValue(user);
     }
 
-    private void isUser() {
+    public void isUser() {
         //Get Values from Text fields
         String userEmail = loginEmail.getEditText().getText().toString().trim();
         String pass = loginPassword.getEditText().getText().toString().trim();
@@ -164,16 +152,16 @@ public class LoginActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                     if (firebaseUser.isEmailVerified()) {
-                        Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), MainDashboard.class);
                         startActivity(intent);
                         dialog.dismiss();
                         finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "Verify Email Address in your mailbox", Toast.LENGTH_LONG).show();
+                        //Snackbar.make(getCurrentFocus(),"Verify Email Address in your mailbox", Snackbar.LENGTH_SHORT);
                         firebaseUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
-                                //Toast.makeText(LoginActivity.this, "Verification email sent", Toast.LENGTH_LONG).show();
                                 dialog.dismiss();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -188,83 +176,12 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Log.d(TAG, "onComplete: Failure to sign in" + task.getException());
                     Toast.makeText(LoginActivity.this, "Signin details do not match our records", Toast.LENGTH_LONG).show();
-                    //Snackbar.make(findViewById(R.id.to_show_snack),"Details don't match our records",Snackbar.LENGTH_LONG).show();
+                    //Snackbar.make(getCurrentFocus(),"Signin details do not match our records", Snackbar.LENGTH_SHORT);
                     dialog.dismiss();
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-
-
+                    sp.edit().putBoolean("loggedIn", true).commit();
                 }
             }
         });
-
-
-
-
-
-
-
-        /*rootNode = FirebaseDatabase.getInstance();
-        reference  = rootNode.getReference().child("User");
-
-        Query checkUser = reference.orderByChild("phoneNumber").equalTo(userPhone);
-        //Log.d(TAG, "isUser: checking if it returns something"+reference.child("userName"));
-
-        //System.out.println(reference.child("userName"));
-        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if (snapshot.exists()){
-
-                    loginPhoneNo.setError(null);
-                    loginPhoneNo.setErrorEnabled(false);
-
-                    String passwordFromDB = snapshot.child(userPhone).child("password").getValue(String.class);
-
-                    if(passwordFromDB.equals(pass)){
-
-                        loginPassword.setError(null);
-                        loginPassword.setErrorEnabled(false);
-
-                        String nameFromDb = snapshot.child(userPhone).child("name").getValue(String.class);
-                        String userNameFromDb = snapshot.child(userPhone).child("userName").getValue(String.class);
-                        String emailFromDb = snapshot.child(userPhone).child("email").getValue(String.class);
-                        //String phoneNoFromDb = snapshot.child(userPhone).child("phoneNumber").getValue(String.class);
-                        //String birthdateFromDb = snapshot.child(userName).child("birthDate").getValue(String.class);
-
-                        Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-
-                        intent.putExtra("name", nameFromDb);
-                        intent.putExtra("email", emailFromDb);
-                        intent.putExtra("phoneNo", userPhone);
-                        intent.putExtra("password", passwordFromDB);
-                        intent.putExtra("userName", userNameFromDb);
-
-                        // set MyFragment Arguments
-                        ProfileFragment myObj = new ProfileFragment();
-
-                        startActivity(intent);
-                        finish();
-                    }
-                    else{
-                       loginPassword.setError("Wrong Password");
-                       loginPassword.requestFocus();
-                    }
-                }
-
-                else{
-                    loginPhoneNo.setError("No such User exists");
-                    loginPhoneNo.requestFocus();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
     }
 
     //Call transition to Sign up screen
@@ -286,6 +203,4 @@ public class LoginActivity extends AppCompatActivity {
         finish(); // remove activity from activity list
     }
 
-    //TODO: Login with email and password
-    //TODO: implement user authentication
 }
